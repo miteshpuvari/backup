@@ -14,8 +14,8 @@ const ProductItem = props => {
         
         <View style={styles.product}>
             <View>
-            <TouchableCmp onPress={props.onViewDetail} >
-                <View>
+                <TouchableCmp onPress={props.onViewDetail} >
+            <View>
             <View style={styles.imageContainer}>
                 <Image style={styles.image} source={{uri: props.image}} />
             </View>
@@ -25,7 +25,11 @@ const ProductItem = props => {
             </View>
             <View style={styles.actions} >
                 <Button color={Colors.primary} title="View Detail"  onPress={props.onViewDetail} />
-                <Button color={Colors.primary} title="Add To Card" onPress={props.onAddToCard} />
+                <Button
+                color={Colors.primary}
+                title="To Cart"
+                onPress={props.onAddToCart}
+              />
             </View>
             </View>
             </TouchableCmp>
@@ -61,10 +65,12 @@ const styles = StyleSheet.create({
         padding: 10
     },
     title: {
+        fontFamily: 'open-sans-bold',
         fontSize: 18,
-        marginVertical: 4
+        marginVertical: 2
     },
     price: {
+        fontFamily: 'open-sans',
         fontSize: 14,
         color: '#888'
     },
