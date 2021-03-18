@@ -8,12 +8,14 @@ import Apploading from 'expo-app-loading';
 
 import productsReducer from './store/reducers/products';
 import cartReducer from './store/reducers/card';
+import orderReducer from './store/reducers/orders';
 import ShopeNavigator from './navigation/ShopeNavigator';
 import { useState } from 'react';
 
 const rootReducer = combineReducers({
   products: productsReducer,
-  cart: cartReducer
+  cart: cartReducer,
+  orders: orderReducer
 });
 
 const fetchFonts =() => Font.loadAsync({

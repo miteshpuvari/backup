@@ -3,10 +3,12 @@ import {View, Text, FlatList, StyleSheet, Button} from 'react-native';
 import { State } from 'react-native-gesture-handler';
 import { color } from 'react-native-reanimated';
 // import { Colors } from 'react-native/Libraries/NewAppScreen';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 
 import Colors from '../../constants/Colors';
 import CartItem from '../../components/shop/CartItem';
+import * as cartActions from '../../store/actions/card';
+import * as ordersActions from '../../store/actions/orders';
 
 const CartScreen = props => {
 
@@ -23,8 +25,9 @@ const CartScreen = props => {
                 
             });
         }
-        return transformedCartItems;
+        return transformedCartItems.sort((a, b) => a.productId > b.productId ? 1 : -1);
     });
+    const dispatch = useDispatch();
 
     return (
         <View style={styles.screen}>
@@ -34,20 +37,30 @@ const CartScreen = props => {
                 </Text>
                 <Button color={Colors.accent} 
                         title="Order Now" 
-                        disabled={cartItems.length === 0} 
+                        disabled={cartItems.length === 0}
+                        onPress={() => {
+                            dispatch(ordersActions.addOrder(cartItems, cartTotalAmount));
+                        }}
                 />
             </View>
             <FlatList   data={cartItems} 
                         keyExtractor={item => item.productId} 
                         renderItem={itemData => <CartItem   quantity={itemData.item.quantity} 
                                                             title={itemData.item.productTitle} 
-                                                            amount={itemData.item.sum} 
-                                                            onRemove={() => {}} 
+                                                            amount={itemData.item.sum}
+                                                            deletable 
+                                                            onRemove={() => {
+                                                                dispatch(cartActions.removeFromCart(itemData.item.productId))
+                                                            }} 
                                                 /> 
                                     } 
             />
         </View>
     )
+};
+
+CartScreen.navigationOptions = {
+    headerTitle: 'Your Cart'
 };
 
 const styles = StyleSheet.create({

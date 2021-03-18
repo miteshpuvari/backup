@@ -1,9 +1,10 @@
-import { ADD_TO_CART } from "../actions/card";
+import { ADD_TO_CART, REMOVE_FROM_CART } from "../actions/card";
 import CartItem from '../../models/card-item';
+import { ADD_ORDER } from "../actions/orders";
 
 const initialState = {
-    items: [],
-    totalAmount: 19.191111
+    items: {},
+    totalAmount: 0.00
 };
 
 export default (state = initialState, action) => {
@@ -31,6 +32,32 @@ export default (state = initialState, action) => {
                 items: {...state.items, [addedProduct.id]: updatedOrNewCartItem},  // this is venila javascript using that you can add or access daynamic property
                 totalAmount: state.totalAmount + prodPrice
             };
+            case REMOVE_FROM_CART: 
+                const selectedCartItem = state.items[action.pid];
+                const currentQty = selectedCartItem.quantity;
+                
+            let updatedCartItems;
+                if(currentQty > 1) {
+                    // need to reduced not erased
+                    updatedCartItems = new CartItem(  selectedCartItem.quantity - 1, 
+                                                            selectedCartItem.productPrice, 
+                                                            selectedCartItem.productTitle, 
+                                                            selectedCartItem.sum - selectedCartItem.productPrice
+                                            );
+                    updatedCartItems = {...state.items, [action.pid]: updatedCartItems}                         
+                }else {
+                    updatedCartItems = {...state.items};
+                    delete updatedCartItems[action.pid];
+                }
+                return {
+                    ...state,
+                    items: updatedCartItems,
+                    totalAmount: state.totalAmount - selectedCartItem.productPrice
+                };
+
+                case ADD_ORDER: 
+                    return initialState;
+                    
     }
     return state;
 };
